@@ -1,15 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dhuerta
- * Date: 27/11/16
- * Time: 00:56
- */
 
 namespace AppBundle\Controller;
 
-
 use AppBundle\Entity\Genus;
+use AppBundle\Entity\GenusNote;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -25,9 +19,15 @@ class GenusController extends Controller{
   public function listAction()
   {
     $em = $this->getDoctrine()->getManager();
-    $genuses = $em->getRepository('AppBundle\Entity\Genus')
-      ->findAll();
+//    $genuses = $em->getRepository('AppBundle\Entity\Genus')
+//      ->findAll();
     //dump($genuses);die;
+
+//      $genuses = $em->getRepository('AppBundle\Entity\Genus')
+//          ->findAllPublishedOrderedBySize();
+
+      $genuses = $em->getRepository('AppBundle\Entity\Genus')
+          ->findAllPublishedOrderedByRecentlyActive();
 
     return $this->render('genus/list.html.twig', [
       'genuses' => $genuses
@@ -44,8 +44,16 @@ class GenusController extends Controller{
       $genus->setSubFamily('Octopodinae');
       $genus->setSpeciesCount(rand(100, 99999));
 
+      $note = new GenusNote();
+      $note->setUsername('AquaWeaver');
+      $note->setUserAvatarFilename('ryan.jpeg');
+      $note->setNote('I counted 8 legs... as they wrapped around me');
+      $note->setCreatedAt(new \DateTime('-1 month'));
+      $note->setGenus($genus);
+
       $em = $this->getDoctrine()->getManager();
       $em->persist($genus);
+      $em->persist($note);
       $em->flush();
 
       return new Response('<html><body><h1>created '.$genus->getName().'</h1></body></html>');
@@ -65,6 +73,14 @@ class GenusController extends Controller{
     if (!$genus) {
       throw $this->createNotFoundException('genus not found');
     }
+
+//    $recentNotes = $genus->getNotes()
+//      ->filter(function(GenusNote $note) {
+//          return $note->getCreatedAt() > new \DateTime('-3 months');
+//      });
+      
+      $recentNotes = $em->getRepository('AppBundle:GenusNote')
+          ->findAllRecentNotesForGenus($genus);
 
     //$notes = [
     //  'Octopus asked me',
@@ -98,34 +114,46 @@ class GenusController extends Controller{
 
     return $this->render('genus/show.html.twig', [
         'genus' => $genus,
+        'recentNoteCount' => count($recentNotes)
     ]);
   }
 
   /**
-   * @Route("/genus/{genusName}/notes", name="genus_show_notes")
+   * @Route("/genus/{name}/notes", name="genus_show_notes")
    * @Method("GET")
    */
-  public function getNotesAction() {
-
-    $notes = [
-      ['id' => 1,
-       'username' => 'AquaPelham',
-       'avatarUri' => '/images/leanna.jpeg',
-       'note' => 'Octopus asked me',
-       'date' => 'Dec. 10, 20016'],
-      ['id' => 2,
-       'username' => 'AquaPelham',
-       'avatarUri' => '/images/ryan.jpeg',
-       'note' => 'I counted 8',
-       'date' => 'Dec. 11, 20016'],
-      ['id' => 3,
-       'username' => 'AquaPelham',
-       'avatarUri' => '/images/leanna.jpeg',
-       'note' => 'Inked!',
-       'date' => 'Dec. 12, 20016'],
-
-    ];
-
+  public function getNotesAction(Genus $genus)
+  {
+      $notes = [];
+      
+      foreach ($genus->getNotes() as $note) {
+          $notes[] = [
+              'id' => $note->getId(),
+              'username' => $note->getUsername(),
+              'avatarUri' => '/images/'.$note->getUserAvatarFilename(),
+              'note' => $note->getNote(),
+              'date' => $note->getCreatedAt()->format('M d, Y')
+          ];
+      }
+//    $notes = [
+//      ['id' => 1,
+//       'username' => 'AquaPelham',
+//       'avatarUri' => '/images/leanna.jpeg',
+//       'note' => 'Octopus asked me',
+//       'date' => 'Dec. 10, 20016'],
+//      ['id' => 2,
+//       'username' => 'AquaPelham',
+//       'avatarUri' => '/images/ryan.jpeg',
+//       'note' => 'I counted 8',
+//       'date' => 'Dec. 11, 20016'],
+//      ['id' => 3,
+//       'username' => 'AquaPelham',
+//       'avatarUri' => '/images/leanna.jpeg',
+//       'note' => 'Inked!',
+//       'date' => 'Dec. 12, 20016'],
+//
+//    ];
+//
     $data = [
       'notes' => $notes
     ];

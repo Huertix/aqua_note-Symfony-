@@ -2,113 +2,145 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\GenusRespository")
  * @ORM\Table(name="genus")
  */
 class Genus {
-  /**
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="AUTO")
-   * @ORM\Column(type="integer")
-   */
-  private $id;
-  /**
-   * @ORM\Column(type="string")
-   */
-  private $name;
+    /**
+    * @ORM\Id
+    * @ORM\GeneratedValue(strategy="AUTO")
+    * @ORM\Column(type="integer")
+    */
+    private $id;
 
-  /**
-   * @ORM\Column(type="string")
-   */
-  private $subFamily;
-  /**
-   * @ORM\Column(type="integer")
-   */
-  private $speciesCount;
+    /**
+    * @ORM\Column(type="string")
+    */
+    private $name;
 
-  /**
-   * @ORM\Column(type="string", nullable=true)
-   */
-  private $funFact;
+    /**
+    * @ORM\Column(type="string")
+    */
+    private $subFamily;
 
+    /**
+    * @ORM\Column(type="integer")
+    */
+    private $speciesCount;
 
-  /**
-   * @return mixed
-   */
-  public function getSubFamily() {
-    return $this->subFamily;
-  }
+    /**
+    * @ORM\Column(type="string", nullable=true)
+    */
+    private $funFact;
 
-  /**
-   * @param mixed $subFamily
-   */
-  public function setSubFamily($subFamily) {
-    $this->subFamily = $subFamily;
-  }
+    /**
+    * @ORM\Column(type="boolean")
+    */
+    private $isPublished = true;
 
-  /**
-   * @return mixed
-   */
-  public function getSpeciesCount() {
-    return $this->speciesCount;
-  }
-
-  /**
-   * @param mixed $speciesCount
-   */
-  public function setSpeciesCount($speciesCount) {
-    $this->speciesCount = $speciesCount;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getFunFact() {
-    return $this->funFact;
-  }
-
-  /**
-   * @param mixed $funFact
-   */
-  public function setFunFact($funFact) {
-    $this->funFact = $funFact;
-  }
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\GenusNote", mappedBy="genus")
+     * @ORM\OrderBy({"createdAt" = "DESC"})
+     */
+    private $notes;
 
 
-  /**
-   * @return mixed
-   */
-  public function getId() {
-    return $this->id;
-  }
+    public function __construct()
+    {
+        $this->notes = new ArrayCollection();
+    }
 
-  /**
-   * @param mixed $id
-   */
-  public function setId($id) {
-    $this->id = $id;
-  }
+    /**
+    * @return mixed
+    */
+    public function getSubFamily() {
+        return $this->subFamily;
+    }
 
-  /**
-   * @return mixed
-   */
-  public function getName() {
-    return $this->name;
-  }
+    /**
+    * @param mixed $subFamily
+    */
+    public function setSubFamily($subFamily) {
+        $this->subFamily = $subFamily;
+    }
 
-  /**
-   * @param mixed $name
-   */
-  public function setName($name) {
-    $this->name = $name;
-  }
+    /**
+    * @return mixed
+    */
+    public function getSpeciesCount() {
+        return $this->speciesCount;
+    }
 
-  public function getUpdatedAt()
-  {
-    return new \DateTime('-'.rand(0, 100).' days');
-  }
+    /**
+    * @param mixed $speciesCount
+    */
+    public function setSpeciesCount($speciesCount) {
+        $this->speciesCount = $speciesCount;
+    }
+
+    /**
+    * @return mixed
+    */
+    public function getFunFact() {
+        return $this->funFact;
+    }
+
+    /**
+    * @param mixed $funFact
+    */
+    public function setFunFact($funFact) {
+        $this->funFact = $funFact;
+    }
+
+
+    /**
+    * @return mixed
+    */
+    public function getId() {
+        return $this->id;
+    }
+
+    /**
+    * @param mixed $id
+    */
+    public function setId($id) {
+        $this->id = $id;
+    }
+
+    /**
+    * @return mixed
+    */
+    public function getName() {
+        return $this->name;
+    }
+
+    /**
+    * @param mixed $name
+    */
+    public function setName($name) {
+        $this->name = $name;
+    }
+
+    public function getUpdatedAt()
+    {
+        return new \DateTime('-'.rand(0, 100).' days');
+    }
+
+    public function setIsPublished($isPublished)
+    {
+        $this->isPublished = $isPublished;
+    }
+
+    /**
+     * @return ArrayCollection|GenusNote[]
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
 
 }

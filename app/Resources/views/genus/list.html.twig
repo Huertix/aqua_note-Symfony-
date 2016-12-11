@@ -3,6 +3,7 @@
     <table class="table table-striped">
         <thead>
         <tr>
+            <th>ID</th>
             <th>Genus</th>
             <th># of species</th>
             <th>Last updated</th>
@@ -12,6 +13,7 @@
         {% for genus in genuses %}
             {#{{ dump(genus) }}#}
             <tr>
+                <td>{{ genus.id }}</td>
                 <td>
                     <a href="{{ path('genus_show', {'genusName': genus.name}) }}">
                         {{ genus.name }}
