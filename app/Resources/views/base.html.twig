@@ -18,7 +18,7 @@
     </form>
 </div>
 <header class="header">
-    <img class="logo-icon" src="{{ asset('images/aquanote-logo.png') }}">
+    <a href="/genus"><img class="logo-icon" src="{{ asset('images/aquanote-logo.png') }}"></a>
     <h1 class="logo">AquaNote</h1>
     <ul class="navi">
         <li class="search"><a href="#" class="js-header-search-toggle"><i class="fa fa-search"></i></a></li>
@@ -27,7 +27,14 @@
 </header>
 
 <div class="main-content">
-    {% block body %}{% endblock %}
+    {% for msg in app.session.flashBag.get('success') %}
+        <div class="alert alert-success">
+            {{ msg }}
+        </div>
+    {% endfor %}
+
+    {% block body %}
+    {% endblock %}
 </div>
 
 <div class="footer">
