@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Genus;
 use AppBundle\Entity\GenusNote;
+use AppBundle\Service\MarkDownTransformer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -73,6 +74,11 @@ class GenusController extends Controller{
     if (!$genus) {
       throw $this->createNotFoundException('genus not found');
     }
+
+    $markdownTransformer = new MarkDownTransformer(
+      $this->get('markdown.parser')
+    );
+    $funFact = $markdownTransformer->parse($genus->getFunFact());
 
 //    $recentNotes = $genus->getNotes()
 //      ->filter(function(GenusNote $note) {
