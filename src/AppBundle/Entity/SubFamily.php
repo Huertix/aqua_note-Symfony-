@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="sub_family")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\SubFamilyRepository")
  */
 class SubFamily
 {
