@@ -29,7 +29,7 @@ class GenusAdminController extends Controller
         $genuses = $this->getDoctrine()
             ->getRepository('AppBundle:Genus')
             ->findAll();
-        return $this->render('genus/list.html.twig', array(
+        return $this->render('admin/list.html.twig', array(
             'genuses' => $genuses
         ));
     }
@@ -58,6 +58,8 @@ class GenusAdminController extends Controller
         ]);
     }
   /**
+   * Thanks to the param converter from SensioFrameworkExtraBundle,
+   * this will automatically query for Genus by using the {id} value.
    * @Route("/genus/{id}/edit", name="admin_genus_edit")
    */
   public function editAction(Request $request, Genus $genus)
