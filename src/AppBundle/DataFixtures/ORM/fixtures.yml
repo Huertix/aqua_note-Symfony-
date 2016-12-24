@@ -1,6 +1,7 @@
 AppBundle\Entity\User:
     user_{1..10}:
-        email: weaverryan+<current()>@gmail.com
+        email: number<current()>@gmail.com
+        plainPassword: 123
 
 AppBundle\Entity\Subfamily:
     genus.subFamily_{1..10}:
