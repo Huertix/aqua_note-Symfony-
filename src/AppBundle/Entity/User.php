@@ -39,6 +39,11 @@ class User implements UserInterface
      */
     private $plainPassword;
 
+    /**
+     * @ORM\Column(type="json_array")
+     */
+    private $roles = [];
+
 
     public function getUsername()
     {
@@ -50,10 +55,19 @@ class User implements UserInterface
         $this->email = $email;
     }
 
-    public function getRoles()
-    {
-        return ['ROLE_USER'];
+    public function getRoles() {
+      $roles = $this->roles;
+
+      if (!in_array('ROLE_USER', $roles)) {
+        $roles[] = 'ROLE_USER';
+      }
+
+      return $roles;
     }
+    //public function getRoles()
+    //{
+    //    return ['ROLE_USER'];
+    //}
 
     public function getPassword()
     {
@@ -83,6 +97,7 @@ class User implements UserInterface
       // Doctrine *not* saving this entity, if only plainPassword changes
       $this->password = null;
     }
+
 
     public function getSalt()
     {

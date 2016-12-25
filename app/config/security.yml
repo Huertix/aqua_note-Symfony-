@@ -21,5 +21,8 @@ security:
             logout:
                 path: /logout
 
+    access_control:
+        #- { path: ^/admin, roles: ROLE_ADMIN }
+
     encoders:
         AppBundle\Entity\User: bcrypt

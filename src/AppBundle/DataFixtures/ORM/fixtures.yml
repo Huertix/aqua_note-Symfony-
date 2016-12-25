@@ -2,6 +2,7 @@ AppBundle\Entity\User:
     user_{1..10}:
         email: number<current()>@gmail.com
         plainPassword: 123
+        roles: ['ROLE_ADMIN']
 
 AppBundle\Entity\Subfamily:
     genus.subFamily_{1..10}:

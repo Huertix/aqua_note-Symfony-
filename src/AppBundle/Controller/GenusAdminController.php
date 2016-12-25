@@ -12,11 +12,13 @@ namespace AppBundle\Controller;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\Genus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Form\GenusFormType;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * @Security("is_granted('ROLE_ADMIN')")
  * @Route("/admin")
  */
 class GenusAdminController extends Controller
