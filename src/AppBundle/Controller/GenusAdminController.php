@@ -18,7 +18,7 @@ use AppBundle\Form\GenusFormType;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Security("is_granted('ROLE_ADMIN')")
+ * @Security("is_granted('ROLE_MANAGE_GENUS')")
  * @Route("/admin")
  */
 class GenusAdminController extends Controller
@@ -51,7 +51,12 @@ class GenusAdminController extends Controller
             $em->persist($genus);
             $em->flush();
 
-            $this->addFlash('success', 'Genus created!');
+            $this->addFlash(
+              'success',
+              sprintf('Genus created by you: %s!', $this->getUser()->getEmail())
+            );
+
+            //$this->addFlash('success', 'Genus created!');
             return $this->redirectToRoute('admin_genus_list');
         }
 
